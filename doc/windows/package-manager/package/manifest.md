@@ -23,7 +23,7 @@ winget install wingetcreate
 After installation, you can run `wingetcreate new` to create a new package and fill in the prompts. The last option **WinGetCreate** will offer is for you to submit the manifest to the packages repository. If you choose yes, you will automatically submit your Pull Request (PR) to the [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs).
 
 ### Using the YAMLCreate.ps1
-To help author manifest files, we have provided a YAMLCreate.ps1 powershell script located in the Tools folder on the [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs). You can use the script by cloning the [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs) on your PC and run the script directly from the **Tools** folder. The script will prompt you for the URL to the installer, then will prompt you to fill in metadata. Like **WinGetCreate**, this script will also offer you to submit your manifest automatically.
+To help author manifest files, we have provided a YAMLCreate.ps1 powershell script located in the Tools folder on the [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs). You can use the script by cloning the [Windows Package Manager Community Repository](https://github.com/microsoft/winget-pkgs) on your PC and run the script directly from the **Tools** folder. The script will prompt you for the URL to the installer, then will prompt you to fill in metadata. Like **WinGetCreate**, this script will also offer you to submit your manifest automatically. Additional documentation on YamlCreate can be found in the [Community Repository](/microsoft/winget-pkgs/blob/master/doc/tools/YamlCreate.md)
 
 ## YAML basics
 
@@ -52,7 +52,7 @@ For a complete list and descriptions of items in a manifest, see the [manifest s
 
 #### [Minimal required schema](#tab/minschema/)
 
-As specified in the [singleton JSON schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.0.0/manifest.singleton.1.0.0.json),
+As specified in the [singleton JSON schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.1.0/manifest.singleton.1.1.0.json),
 only a number of fields are required.  The minimal supported YAML file would look like the example below. The singleton format is only valid for packages containing
 a single installer and a single locale. If more than one installer or locale is provided, the multiple YAML file format and schema must be used.
 
@@ -73,7 +73,7 @@ Installers:
    InstallerUrl:    # Path to download installation file.
    InstallerSha256: # SHA256 calculated from installer.
 ManifestType:       # The manifest file type
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 #### [Example](#tab/minexample/)
@@ -95,17 +95,17 @@ Installers:
    InstallerSha256: 092aa89b1881e058d31b1a8d88f31bb298b5810afbba25c5cb341cfa4904d843
    SignatureSha256: e53f48473621390c8243ada6345826af7c713cf1f4bbbf0d030599d1e4c175ee
 ManifestType: singleton
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 #### Multiple File Example
 In order to provide the best user experience, manifests should contain as much meta-data as possible. In order to separate concerns for validating installers
 and providing localized meta-data manifests will be split into multiple files. The minimum number of YAML files for this kind of manifest is three. Additional
 locales should also be provided. 
-* A [version](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.0.0/manifest.version.1.0.0.json) file
-* The [default locale](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.0.0/manifest.defaultLocale.1.0.0.json) file
-* An [installer](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.0.0/manifest.installer.1.0.0.json) file
-* Additional [locale](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.0.0/manifest.locale.1.0.0.json) files
+* A [version](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.1.0/manifest.version.1.1.0.json) file
+* The [default locale](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.1.0/manifest.defaultLocale.1.1.0.json) file
+* An [installer](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.1.0/manifest.installer.1.1.0.json) file
+* Additional [locale](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.1.0/manifest.locale.1.1.0.json) files
 
 The example below shows many optional meta-data fields and multiple locales. Note the default locale has more requirements than additional locales. In the show
 command, any required fields that aren't provided for additional locales will display fields from the default locale.
@@ -117,7 +117,7 @@ PackageIdentifier: Microsoft.WindowsTerminal
 PackageVersion: 1.6.10571.0
 DefaultLocale: en-US
 ManifestType: version
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 Path: manifests / m / Microsoft / WindowsTerminal / 1.6.10571.0 / Microsoft.WindowsTerminal.locale.en-US.yaml
@@ -147,8 +147,13 @@ Tags:
 - cmd
 - ps
 - terminal
+ReleaseNotes: |
+  This release brings all of the preview changes in Windows Terminal 1.6 to the stable channel. Notable changes include:
+  * Experimental support for HLSL pixel shaders
+  * Italic text (SGR 3), OSC 9;4 progress reports and OSC 9;9 CWD reports
+ReleaseNotesUrl: https://github.com/microsoft/terminal/releases/tag/v1.6.10571.0
 ManifestType: defaultLocale
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 Path: manifests / m / Microsoft / WindowsTerminal / 1.6.10571.0 / Microsoft.WindowsTerminal.locale.fr-FR.yaml
@@ -160,7 +165,7 @@ PackageLocale: fr-FR
 Publisher: Microsoft
 ShortDescription: Le nouveau terminal Windows, une expérience de ligne de commande à onglets pour Windows.
 ManifestType: locale
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 Path: manifests / m / Microsoft / WindowsTerminal / 1.6.10571.0 / Microsoft.WindowsTerminal.installer.yaml
@@ -171,6 +176,7 @@ PackageVersion: 1.6.10571.0
 Platform: 
  - Windows.Desktop
 MinimumOSVersion: 10.0.18362.0
+ReleaseDate: 2021-03-01
 InstallerType: msix
 InstallModes: 
  - silent
@@ -189,7 +195,7 @@ Installers:
    InstallerSha256: 092aa89b1881e058d31b1a8d88f31bb298b5810afbba25c5cb341cfa4904d843
    SignatureSha256: e53f48473621390c8243ada6345826af7c713cf1f4bbbf0d030599d1e4c175ee
 ManifestType: installer
-ManifestVersion: 1.0.0
+ManifestVersion: 1.1.0
 ```
 
 * * *
